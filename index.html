@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Curo Tools</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:500|Noto+Sans+KR:500&display=swap&subset=japanese,korean" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+      * {
+        font-family: 'Noto Sans KR', 'Noto Sans JP', sans-serif;
+        font-weight: 500;
+      }
+
+      body {
+        background-color: #fff;
+        overflow: hidden;
+        padding: 20px;
+      }
+
+      div.content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+      }
+
+      div.text-box {
+        width: 80%;
+        height: 100%;
+        border: 1px solid #000;
+        overflow: auto;
+      }
+
+      div.text-box > div.text-header {
+        width: 100%;
+        height: 40px;
+        background: #70b0e0;
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      div.text-box > div.text-header > i {
+        cursor: pointer;
+        margin-right: 12px;
+        margin-left: auto;
+      }
+      div.text-box > div.text-body {
+        width: 100%;
+        height: calc(100% - 40px);
+      }
+
+      div.text-box > div.text-body > textarea {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 20px;
+        resize: none;
+      }
+
+      textarea:focus {
+        outline: none;
+      }
+
+      div.empty-box {
+        width: 5%;
+        height: 100%;
+      }
+
+      div.result-box {
+        float: right;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #000;
+        overflow: auto;
+      }
+
+      div.result-box > div.result-header {
+        width: 100%;
+        height: 40px;
+        background: #70b0e0;
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      div.result-box > div.result-header > i {
+        cursor: pointer;
+      }
+
+      div.result-box > div.result-header > select {
+        width: 65px;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+
+      span.header-title {
+        padding-left: 14px;
+        padding-right: 8px;
+      }
+
+      div.result-box > div.result-body {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="text-box">
+        <div class="text-header">
+          <span class="header-title">Text</span>
+          <i class="fas fa-arrow-alt-circle-left" onclick="removeSpace()"></i>
+        </div>
+        <div class="text-body">
+          <textarea id="textarea" oninput="switchText()"></textarea>
+        </div>
+      </div>
+      <div class="empty-box">
+      </div>
+      <div class="result-box">
+        <div class="result-header">
+          <span class="header-title">Result</span>
+          <i class="fas fa-copy copy" data-clipboard-target="#text"></i>
+          <select class="checkLine" onchange="switchText()">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="result-body">
+          <span class="result-text" id="text">
+            Empty Text
+          </span>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script>
+      $(".checkLine").val(getParam('v')==null?0:getParam('v')).attr("selected", "selected")
+
+      function switchText(){
+        const k = parseInt($("select").val())
+        if($("#textarea").val() == ""){ $('.result-text').html("Empty Text"); return; }
+        const textA = $.grep($("#textarea").val().split("\n"),function(n){ return n.length > 1; })
+        let textB = ""
+        for (let i = 0; i < textA.length; i++) {
+          if(i % k == 0 && i != 0)
+            textB += "<br>"
+          textB += textA[i].replace(/\[([0-9]*)\]/, '') + "<br>"
+        }
+        $('.result-text').html(textB);
+      }
+
+      function getParam(paramName) {
+        let returnValue;
+        const url = location.href;
+        const parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
+        for (let i = 0; i < parameters.length; i++) {
+          const varName = parameters[i].split('=')[0];
+          if (varName.toUpperCase() == paramName.toUpperCase()) {
+            returnValue = parameters[i].split('=')[1];
+            return decodeURIComponent(returnValue);
+          }
+        }
+      }
+
+      new ClipboardJS('.copy');
+    </script>
+  </body>
+</html>
