@@ -155,7 +155,7 @@
         for (let i = 0; i < textA.length; i++) {
           if(i % k == 0 && i != 0)
             textB += "<br>"
-          textB += textA[i].replace(/(\[([1-9|ㄱ-ㅎ|가-힣])*\])/, '') + "<br>"
+          textB += textA[i].replace(/(\[([1-9|ㄱ-ㅎ|가-힣])*\])/g, '') + "<br>"
         }
         $('.result-text').html(textB);
       }
